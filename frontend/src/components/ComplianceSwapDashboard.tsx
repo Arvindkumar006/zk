@@ -3,7 +3,7 @@ import { Shield, Cpu, RefreshCw, Database, Terminal, CheckCircle, XCircle, Alert
 import { rpc } from '@stellar/stellar-sdk';
 
 const rpcServer = new rpc.Server("https://soroban-testnet.stellar.org");
-const CONTRACT_ID = "CC7333333333333333333333333333333333333333333333333392K8";
+const CONTRACT_ID = "CC73V6K7P6J4X2Y4Z5W6V7U8T9R0E1W2Q3A4S5D6F7G8H9J0K1L2M3N4";
 
 type PipelineStatus = 'idle' | 'fetching' | 'proving' | 'broadcasting' | 'success' | 'failed';
 
