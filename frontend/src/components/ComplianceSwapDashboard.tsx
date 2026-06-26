@@ -3,7 +3,7 @@ import { Shield, Cpu, RefreshCw, Database, Terminal, CheckCircle, XCircle, Alert
 import { rpc, TransactionBuilder, Account, Contract, nativeToScVal, Networks, StrKey } from '@stellar/stellar-sdk';
 
 const rpcServer = new rpc.Server("https://soroban-testnet.stellar.org");
-const CONTRACT_ID = "CC73V6K7P6J4X2Y4Z5W6V7U8T9R0E1W2Q3A4S5D6F7G8H9J0K1L2M3N4";
+const CONTRACT_ID = "CDLZFC3SYJYDZT7K67VZ75HPJGWN7U7LI2K777ZGPB6TL4UYDC7ZORPH";
 
 // Deterministic cryptographic test vectors from Aztec Noir compilation
 const DET_PUBLIC_KEY_HASH = new Uint8Array([
