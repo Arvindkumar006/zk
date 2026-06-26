@@ -1,0 +1,16 @@
+# Rust/Cargo build outputs
+target/
+
+# Noir/Nargo build outputs
+/circuits/compliance_check/target/
+decisions/
+proofs/
+
+# Third-party library clones
+/lib/
+
+# Local IDE configuration files
+.antigravity/
+.vscode/
+.idea/
+.gemini/
