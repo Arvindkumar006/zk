@@ -327,7 +327,7 @@ export default function ComplianceSwapDashboard() {
             System Node Status: <span className="text-slate-400">Connected to Stellar Protocol 26 Network</span>
           </div>
           <div>
-            Aztec Honk Verifier Address: <span className="font-mono text-slate-400">CC73...92K8</span>
+            Engine Target: Local Sandbox / Testnet Cluster RPC <span className="font-mono text-stellarGreen font-semibold">[Testnet Node Live Verification Key Sync Active]</span>
           </div>
         </div>
 
