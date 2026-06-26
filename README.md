@@ -71,6 +71,16 @@ Stellar Horizon Pool achieves **Compliant Privacy** by splitting compliance veri
   |                        RWA Assets Settled Confidentially                          |
   +-----------------------------------------------------------------------------------+
 ```
+---
+
+## Cryptographic Design Decisions & Engineering Trade-offs
+
+> ### 🛡️ Cryptographic Parameter Isolation & Scale-up Path
+>
+> For the hackathon Minimum Viable Product (MVP) scope, our Aztec Noir circuit (`src/main.nr`) explicitly enforces a fixed Merkle tree depth of 4 (`[Field; 4]`). This was a deliberate engineering optimization decision designed to keep the cryptographic constraint pool small and maximize compilation and verification speeds during live judge evaluations.
+>
+> * **Current Implementation Capacity:** A depth of 4 accommodates a specialized institutional allowlist registry of exactly 16 enterprise participants ($2^4 = 16$).
+> * **Production Scaling Path:** The underlying binary leaf reconstruction logic is written using a dynamic loop framework. Scaling the pool to production-grade enterprise capacity requires only changing the compile-time dimension parameter flag to `[Field; 20]` (supporting up to 1,048,576 unique compliant institutional identities) or `[Field; 32]` without requiring any structural changes to our core zero-knowledge mathematical circuit validation logic.
 
 ---
 
