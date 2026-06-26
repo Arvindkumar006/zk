@@ -137,7 +137,14 @@ curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
 noirup
 ```
 
-### 3. Install Frontend Dependencies
+### 3. Initialize Workspace Dependencies
+Automate pulling down the external cryptographic verifier submodules and setting up dependencies using our unified setup script:
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+### 4. Install Frontend Dependencies
 ```bash
 cd frontend
 npm install
