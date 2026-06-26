@@ -6,11 +6,11 @@ use soroban_sdk::{
 
 /// Interface matching the rs-soroban-ultrahonk verifier contract.
 ///
-/// Under Protocol 26, the verifier invokes native BN254 pairing and multi-scalar multiplication (MSM)
-/// host functions to run sumcheck and KZG opening proof verification within CPU resource limits.
+/// Under Protocol 26, the verifier invokes native BN254 pairing and multi-scalar 
+/// multiplication (MSM) host functions to run sumcheck and KZG opening proof verification.
 #[contractclient(name = "UltraHonkVerifierClient")]
 pub trait UltraHonkVerifier {
-    fn verify_proof(env: Env, public_inputs: Bytes, proof_bytes: Bytes);
+    fn verify_proof(env: Env, proof: Bytes, public_inputs: Bytes);
 }
 
 #[contracterror]
@@ -26,10 +26,16 @@ pub enum Error {
 }
 
 #[contracttype]
-#[derive(Clone)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum DataKey {
     Admin,
     MerkleRoot,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ComplianceEvent {
+    Verified(u64),
 }
 
 #[contract]
@@ -50,7 +56,6 @@ impl HorizonPool {
     }
 
     /// Update the compliance Merkle root representing the latest KYC/AML allowlist database.
-    /// Access control is enforced via the administrator's cryptographic authorization.
     pub fn update_root(env: Env, new_root: BytesN<32>) -> Result<(), Error> {
         let admin: Address = env
             .storage()
@@ -65,12 +70,6 @@ impl HorizonPool {
     }
 
     /// Verify a user compliance ZK proof and execute the corresponding private swap.
-    ///
-    /// This function performs:
-    /// 1. Integration verification checking that the public inputs match the on-chain Merkle root.
-    /// 2. Verification that the swap amount matches the public input parameter to prevent proof reuse.
-    /// 3. Dynamic call to the UltraHonk verifier contract using BN254 pairing/MSM primitives.
-    /// 4. Emission of a 'Private Compliance Verified' event.
     pub fn verify_and_execute_swap(
         env: Env,
         proof: Bytes,
@@ -113,14 +112,14 @@ impl HorizonPool {
             flat_inputs.append(&Bytes::from(item));
         }
 
-        // 4. Perform external contract call to verify the UltraHonk proof
+        // 4. Perform external contract call matching official parameter layout sequence
         let verifier_client = UltraHonkVerifierClient::new(&env, &verifier_contract_id);
-        verifier_client.verify_proof(&flat_inputs, &proof);
+        verifier_client.verify_proof(&proof, &flat_inputs);
 
-        // 5. Emit success event for private compliance verification
+        // 5. Emit contract event using type-safe macros
         env.events().publish(
-            (Symbol::new(&env, "Private Compliance Verified"),),
-            amount,
+            (Symbol::new(&env, "compliance"),),
+            ComplianceEvent::Verified(amount),
         );
 
         Ok(())

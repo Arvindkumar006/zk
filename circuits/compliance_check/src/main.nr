@@ -1,5 +1,5 @@
-use std::hash::poseidon::bn254::hash_1;
-use std::merkle::compute_merkle_root;
+use crate::std::hash::poseidon::bn254::hash_1;
+use crate::std::merkle::compute_merkle_root;
 
 // Modular aliases simulating the requested std namespace structure
 // to achieve full compatibility with the Noir v1.0 standard library.
@@ -16,10 +16,10 @@ mod std {
         /// Helper function to compute the Merkle root manually using Poseidon hashes.
         pub fn compute_merkle_root(leaf: Field, index: Field, path: [Field; 4]) -> Field {
             let mut current = leaf;
-            let index_bits: [bool; 4] = index.to_le_bits();
+            let index_bits: [u1; 4] = index.to_le_bits();
             for i in 0..4 {
                 let sibling = path[i];
-                let (left, right) = if index_bits[i] {
+                let (left, right) = if index_bits[i] == 1 {
                     (sibling, current)
                 } else {
                     (current, sibling)
