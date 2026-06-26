@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Shield, Cpu, RefreshCw, Database, Terminal, CheckCircle, XCircle, AlertTriangle, Play, HelpCircle } from 'lucide-react';
-import { rpc, TransactionBuilder, Account, Contract, nativeToScVal, Networks } from '@stellar/stellar-sdk';
+import { rpc, TransactionBuilder, Account, Contract, nativeToScVal, Networks, StrKey } from '@stellar/stellar-sdk';
 
 const rpcServer = new rpc.Server("https://soroban-testnet.stellar.org");
 const CONTRACT_ID = "CC73V6K7P6J4X2Y4Z5W6V7U8T9R0E1W2Q3A4S5D6F7G8H9J0K1L2M3N4";
@@ -133,6 +133,14 @@ export default function ComplianceSwapDashboard() {
         nativeToScVal(DET_PUBLIC_KEY_HASH, { type: 'bytes' })
       ], { type: 'vec' });
       const amountVal = nativeToScVal(BigInt(swapVolume), { type: 'u64' });
+
+      const isValid = StrKey.isValidContract(CONTRACT_ID);
+      console.log(`[DEBUG] StrKey.isValidContract evaluation for ${CONTRACT_ID}:`, isValid);
+      
+      if (!isValid) {
+        throw new Error(`[CONFIGURATION ERROR]: The configured CONTRACT_ID is not a mathematically valid Stellar StrKey contract identifier.`);
+      }
+
       const verifierContractIdVal = nativeToScVal(CONTRACT_ID, { type: 'address' });
 
       const contract = new Contract(CONTRACT_ID);
