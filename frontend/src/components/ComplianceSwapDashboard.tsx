@@ -3,7 +3,7 @@ import { Shield, Cpu, RefreshCw, Database, Terminal, CheckCircle, XCircle, Alert
 import { rpc, TransactionBuilder, Account, Contract, nativeToScVal, Networks, StrKey } from '@stellar/stellar-sdk';
 
 const rpcServer = new rpc.Server("https://soroban-testnet.stellar.org");
-const CONTRACT_ID = "CDLZFC3SYJYDZT7K67VZ75HPJGWN7U7LI2K777ZGPB6TL4UYDC7ZORPH";
+const CONTRACT_ID = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
 
 // Deterministic cryptographic test vectors from Aztec Noir compilation
 const DET_PUBLIC_KEY_HASH = new Uint8Array([
@@ -82,7 +82,7 @@ export default function ComplianceSwapDashboard() {
       addLog("Step 1/3: Fetching active KYC Merkle root from Soroban storage...", "info");
       addLog(`Connecting to Stellar Node RPC: ${rpcServer.serverURL.toString()}`, "info");
       addLog(`Querying contract footprint data for: ${CONTRACT_ID}`, "info");
-      
+
       const ledgerInfo = await rpcServer.getLatestLedger();
       addLog(`Connected successfully. Active Testnet Ledger Sequence: ${ledgerInfo.sequence} (Protocol version: ${ledgerInfo.protocolVersion})`, "success");
       // Derive dynamic mock root based on CONTRACT_ID and ledger sequence using Web Crypto API
@@ -110,10 +110,10 @@ export default function ComplianceSwapDashboard() {
       addLog("[SYSTEM NOTICE]: Running in Deterministic Test Vector Validation Mode", "info");
       addLog("Loading pre-compiled Aztec Noir ultra-honk proof bytes...", "info");
       addLog("Dispatching cryptographic proof verification layer to Soroban simulation pipeline...", "info");
-      
+
       // Build parameters using nativeToScVal
       const proofVal = nativeToScVal(DET_PROOF_BYTES, { type: 'bytes' });
-      
+
       const mockRoot32 = new Uint8Array(32);
       const hexRoot = dynamicRoot.startsWith("0x") ? dynamicRoot.slice(2) : dynamicRoot;
       for (let i = 0; i < 32; i++) {
@@ -136,7 +136,7 @@ export default function ComplianceSwapDashboard() {
 
       const isValid = StrKey.isValidContract(CONTRACT_ID);
       console.log(`[DEBUG] StrKey.isValidContract evaluation for ${CONTRACT_ID}:`, isValid);
-      
+
       if (!isValid) {
         throw new Error(`[CONFIGURATION ERROR]: The configured CONTRACT_ID is not a mathematically valid Stellar StrKey contract identifier.`);
       }
@@ -164,7 +164,7 @@ export default function ComplianceSwapDashboard() {
 
       addLog(`Broadcasting simulation request...`, "info");
       const simulation = await rpcServer.simulateTransaction(tx);
-      
+
       if (simulation.error) {
         throw new Error(simulation.error);
       }
@@ -210,7 +210,7 @@ export default function ComplianceSwapDashboard() {
   return (
     <div className="min-h-screen bg-darkBg text-slate-200 flex flex-col items-center justify-center p-6 select-none">
       <div className="w-full max-w-6xl bg-cardBg border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
-        
+
         {/* Header */}
         <div className="border-b border-slate-800 bg-slate-950/80 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -227,10 +227,10 @@ export default function ComplianceSwapDashboard() {
 
         {/* Dashboard Panels */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-slate-800">
-          
+
           {/* Left Panel: Inputs & Pipeline controls */}
           <div className="lg:col-span-7 p-6 flex flex-col justify-between space-y-6">
-            
+
             {/* Intro text */}
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-wider text-stellarGreen mb-2">Compliance Swap Controller</h2>
@@ -324,11 +324,10 @@ export default function ComplianceSwapDashboard() {
               <button
                 onClick={executePipeline}
                 disabled={status !== 'idle' && status !== 'success' && status !== 'failed'}
-                className={`w-full py-3 rounded font-bold uppercase tracking-wider text-xs transition-all flex items-center justify-center gap-2 ${
-                  status !== 'idle' && status !== 'success' && status !== 'failed'
+                className={`w-full py-3 rounded font-bold uppercase tracking-wider text-xs transition-all flex items-center justify-center gap-2 ${status !== 'idle' && status !== 'success' && status !== 'failed'
                     ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                     : 'bg-stellarGreen/10 border border-stellarGreen hover:bg-stellarGreen/25 text-stellarGreen shadow-[0_0_12px_rgba(0,230,118,0.15)] active:scale-[0.99]'
-                }`}
+                  }`}
               >
                 <Play className="w-4 h-4" />
                 Execute Compliant Swap
@@ -340,7 +339,7 @@ export default function ComplianceSwapDashboard() {
           {/* Right Panel: Hardware Prover Stream Terminal */}
           <div className="lg:col-span-5 p-6 flex flex-col justify-between bg-slate-950/40">
             <div className="flex flex-col h-full space-y-4">
-              
+
               {/* Terminal Title */}
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
@@ -364,9 +363,9 @@ export default function ComplianceSwapDashboard() {
                       <span className="text-slate-500 shrink-0">[{log.timestamp}]</span>
                       <span className={
                         log.type === 'error' ? 'text-red-400 font-bold' :
-                        log.type === 'warn' ? 'text-yellow-400' :
-                        log.type === 'success' ? 'text-stellarGreen font-semibold' :
-                        'text-slate-300'
+                          log.type === 'warn' ? 'text-yellow-400' :
+                            log.type === 'success' ? 'text-stellarGreen font-semibold' :
+                              'text-slate-300'
                       }>
                         {log.message}
                       </span>
