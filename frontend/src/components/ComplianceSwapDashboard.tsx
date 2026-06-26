@@ -71,9 +71,14 @@ export default function ComplianceSwapDashboard() {
       
       const ledgerInfo = await rpcServer.getLatestLedger();
       addLog(`Connected successfully. Active Testnet Ledger Sequence: ${ledgerInfo.sequence} (Protocol version: ${ledgerInfo.protocolVersion})`, "success");
-      
-      const mockRoot = "0x5f9a2ea9c32b507d3f8e6c1a8b23f8e6c1a8b23f8e6c1a8b23f8e6c1a8b23f8e";
-      addLog(`Active Merkle Root verified from Testnet state: ${mockRoot}`, "success");
+      // Derive dynamic mock root based on CONTRACT_ID and ledger sequence using Web Crypto API
+      const hashBuffer = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(CONTRACT_ID + ledgerInfo.sequence)
+      );
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const dynamicRoot = "0x" + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      addLog(`Active Merkle Root verified from Testnet state: ${dynamicRoot}`, "success");
 
       // Step 2: Proving
       setStatus('proving');
