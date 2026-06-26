@@ -96,9 +96,24 @@ export default function ComplianceSwapDashboard() {
       
       // Build parameters using nativeToScVal
       const proofVal = nativeToScVal(new Uint8Array(100), { type: 'bytes' });
+      
       const mockRoot32 = new Uint8Array(32);
+      const hexRoot = dynamicRoot.startsWith("0x") ? dynamicRoot.slice(2) : dynamicRoot;
+      for (let i = 0; i < 32; i++) {
+        mockRoot32[i] = parseInt(hexRoot.substring(i * 2, i * 2 + 2), 16) || 0;
+      }
+
       const mockAmount32 = new Uint8Array(32);
+      const bigIntValue = BigInt(swapVolume);
+      for (let i = 0; i < 8; i++) {
+        mockAmount32[31 - i] = Number((bigIntValue >> BigInt(i * 8)) & 0xffn);
+      }
+
       const mockRecipient32 = new Uint8Array(32);
+      const cleanRecipient = recipientHash.startsWith("0x") ? recipientHash.slice(2) : recipientHash;
+      for (let i = 0; i < 32; i++) {
+        mockRecipient32[i] = parseInt(cleanRecipient.substring(i * 2, i * 2 + 2), 16) || 0;
+      }
       const publicInputsVal = nativeToScVal([
         nativeToScVal(mockRoot32, { type: 'bytes' }),
         nativeToScVal(mockAmount32, { type: 'bytes' }),
