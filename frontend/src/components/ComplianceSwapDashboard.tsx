@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Shield, Cpu, RefreshCw, Database, Terminal, CheckCircle, XCircle, AlertTriangle, Play, HelpCircle } from 'lucide-react';
-import { rpc, TransactionBuilder, Account, Contract, nativeToScVal, Networks, StrKey } from '@stellar/stellar-sdk';
+import { rpc, TransactionBuilder, Account, Contract, nativeToScVal, Networks, StrKey, Keypair } from '@stellar/stellar-sdk';
 
 const rpcServer = new rpc.Server("https://soroban-testnet.stellar.org");
 const CONTRACT_ID = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
@@ -152,8 +152,9 @@ export default function ComplianceSwapDashboard() {
         verifierContractIdVal
       );
 
-      // Initialize mock account
-      const sourceAccount = new Account("GD7Y3X4J3X4J3X4J3X4J3X4J3X4J3X4J3X4J3X4J3X4J3X4J3X4J3X4J", "0");
+      // Generate a mathematically valid random Stellar public key dynamically for simulation
+      const mockPublicKey = Keypair.random().publicKey();
+      const sourceAccount = new Account(mockPublicKey, "0");
       const tx = new TransactionBuilder(sourceAccount, {
         fee: "100",
         networkPassphrase: Networks.TESTNET,
