@@ -141,7 +141,7 @@ export default function ComplianceSwapDashboard() {
         throw new Error(`[CONFIGURATION ERROR]: The configured CONTRACT_ID is not a mathematically valid Stellar StrKey contract identifier.`);
       }
 
-      const verifierContractIdVal = nativeToScVal(CONTRACT_ID, { type: 'address' });
+      const verifierContractIdVal = nativeToScVal(new Contract(CONTRACT_ID).address(), { type: 'address' });
 
       const contract = new Contract(CONTRACT_ID);
       const callOp = contract.call(
