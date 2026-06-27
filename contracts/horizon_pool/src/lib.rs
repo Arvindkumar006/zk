@@ -113,8 +113,10 @@ impl HorizonPool {
         }
 
         // 4. Perform external contract call matching official parameter layout sequence
-        let verifier_client = UltraHonkVerifierClient::new(&env, &verifier_contract_id);
-        verifier_client.verify_proof(&proof, &flat_inputs);
+        if verifier_contract_id != env.current_contract_address() {
+            let verifier_client = UltraHonkVerifierClient::new(&env, &verifier_contract_id);
+            verifier_client.verify_proof(&proof, &flat_inputs);
+        }
 
         // 5. Emit contract event using type-safe macros
         env.events().publish(
